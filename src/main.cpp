@@ -1,5 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CCScheduler.hpp>
+#include <Geode/modify/MenuLayer.hpp>
 #include <Geode/modify/PauseLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/PlayerObject.hpp>
@@ -18,12 +19,10 @@ static bool s_showTimer = true;
 static double s_yRoundingTarget = 0.1;
 static double s_xRoundingTarget = 0.5;
 static double s_tpsValue = 240.0;
-
 static float s_lastPortalSpeed = -1.f;
 static int s_debugCounter = 0;
 static double s_globalMultiplier = 1.0;
 static double s_positionDebt = 0.0;
-
 static double s_lastUnroundedX = 0.0;
 static double s_prevUpdateX = 0.0;
 static bool s_hasPrevUpdateX = false;
@@ -52,6 +51,36 @@ $on_mod(Loaded) {
 		"x-rounding-target", [](double val) { s_xRoundingTarget = val; });
 	listenForSettingChanges<double>("tps-value", [](double val) { s_tpsValue = val; });
 }
+
+#include <Geode/Geode.hpp>
+#include <Geode/modify/MenuLayer.hpp>
+
+using namespace geode::prelude;
+
+class $modify(MyMenuLayer, MenuLayer) {
+	bool init() {
+		if (!MenuLayer::init()) return false;
+
+		static bool s_hasShownSilicateWarning = false;
+		if (!s_hasShownSilicateWarning) {
+			s_hasShownSilicateWarning = true;
+			Loader::get()->queueInMainThread([] {
+				if (Loader::get()->isModLoaded("peony.silicate")) {
+					FLAlertLayer::create("Warning!",
+						"Position Rounding detected Silicate mod, this mod is supposed to work "
+						"with Silicate but inorder for SSB fix to work you will have to go to "
+						"Silicate's menu and find settings tab, and then disable the mod and "
+						"reenable it, while NOT being in a level.",
+						"OK")
+						->show();
+				}
+			});
+		}
+
+		return true;
+	}
+};
+
 
 class $modify(MyPauseLayer, PauseLayer) {
 	void customSetup() {
@@ -244,8 +273,7 @@ class $modify(PlayerObject) {
 		}
 
 		if (s_debugLogsEnabled && s_debugCounter > 0) {
-			log::info(
-				"Target: {:.2f} | Debt: {:.3f}, CleanV: {:.2f}, Multiplier: {:.5f}",
+			log::info("Target: {:.2f} | Debt: {:.3f}, CleanV: {:.2f}, Multiplier: {:.5f}",
 				s_xRoundingTarget, s_positionDebt, s_cleanV, s_globalMultiplier);
 			s_debugCounter--;
 		}
