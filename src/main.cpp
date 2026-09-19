@@ -168,6 +168,7 @@ class $modify(TimerPlayLayer, PlayLayer) {
 };
 
 class $modify(PlayerObject) {
+	static const int PRIORITY = 100;
 	void setYVelocity(double velocity, int type) {
 		if (s_modEnabled && s_yEnabled && s_yRoundingTarget > 0.0) {
 			velocity = std::round(velocity / s_yRoundingTarget) * s_yRoundingTarget;
