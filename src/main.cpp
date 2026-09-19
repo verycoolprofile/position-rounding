@@ -222,7 +222,7 @@ class $modify(PlayerObject) {
 				s_positionDebt -= compensated;
 			}
 
-			s_globalMultiplier = std::clamp(s_globalMultiplier, 0.95, 1.05);
+			s_globalMultiplier = std::clamp(s_globalMultiplier, 0.3, 2.0);
 			s_globalMultiplier = std::round(s_globalMultiplier * 100000.0) / 100000.0;
 		} else if (isMainPlayer) {
 			s_globalMultiplier = 1.0;
