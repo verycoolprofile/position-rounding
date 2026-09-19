@@ -8,9 +8,9 @@
 	},
 	"id": "verycoolprofile.velocity-rounding",
 	"name": "position rounding",
-	"version": "v1.6.9",
+	"version": "v1.7.0",
 	"developer": "verycoolprofile",
-	"description": "Being rounded🤯",
+	"description": "Being rounded with SSB Fix support 🤯",
 	"logo": "logo.png",
 	"resources": {
 		"sprites": [
@@ -20,7 +20,7 @@
 	"settings": {
 		"mod-enabled": {
 			"name": "Enable Mod",
-			"description": "toggles rounding who wouldve known.",
+			"description": "toggles rounding who would've known.",
 			"type": "bool",
 			"default": true
 		},
@@ -37,6 +37,35 @@
 			"type": "bool",
 			"default": true,
 			"enable-if": "mod-enabled"
+		},
+		"ssb-fix-enabled": {
+			"name": "SSB Fix (X-Pos Desync Compensation)",
+			"description": "Enables time correction to fix music desync caused by X rounding. Doesn't work for Y-Velocity rounding.",
+			"type": "bool",
+			"default": true,
+			"enable-if": "mod-enabled && x-enabled"
+		},
+		"enable-debug-logs": {
+			"name": "Enable Debug Logs",
+			"description": "Prints calculation details into the Geode console Used while developing the mod for debugging. May lag the game because it sends logs every frame idk if that does some lag.",
+			"type": "bool",
+			"default": false
+		},
+		"show-timer": {
+			"name": "Show Timer",
+			"description": "Displays an independent wall-clock timer on the screen. Used while developing the mod for debugging. You don't need this unless you're trying to help me code this.",
+			"type": "bool",
+			"default": true
+		},
+		"tps-value": {
+			"name": "Macro TPS",
+			"description": "The TPS used in your macro for precise calculations.",
+			"type": "float",
+			"default": 240.0,
+			"min": 60.0,
+			"max": 3840.0,
+			"step": 60.0,
+			"enable-if": "mod-enabled && x-enabled && ssb-fix-enabled"
 		},
 		"y-rounding-target": {
 			"name": "Y Velocity Rounding",
